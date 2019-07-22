@@ -1,23 +1,61 @@
 <body>
 <div id="root"></div>
+
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
 <script type="text/babel">
-const rootElement = document.getElementById(
-  'root',
-)
-const Message = props => (
-  <div>{props.children}</div>
-)
+const rootElement = document.getElementById('root')
+
+// const element = (
+//   <div className="container">
+//     <div>Hello World</div>
+//     <div>Hello World</div>
+//   </div>
+// )
+
+// Reusing a component:
+// const helloWorld = <div>Hello World</div>
+// const element = (
+//   <div className="container">
+//     { helloWorld }
+//     { helloWorld }
+//   </div>
+// )
+// )
+
+// Reusing a variable component:
+// const message = props => <div>{ props.msg }</div>
+// const element = (
+//   <div className="container">
+//     { message({ msg: 'Hello World' }) }  {/* Problem: Not as composable as JSX */}
+//     { React.createElement(message, { msg: 'Goodbye World' }) }  {/* Solution: Use createElement; takes a function and props */}
+//   </div>
+// )
+
+// Using it as a custom component:
+const Message = props => <div>{ props.children }</div>
 const element = (
   <div className="container">
+    <message />  {/* Problem: will error b/c no way to tell if we mean String or Variable */}
+    <Message />  {/* Solution: Capitalize component names to distinguish; NB: const message would be Message also */}
+
+    {/* Don't forget the props: */}
+    <Message children="Hello World" />
+
+    {/* By using the `children` prop instead you can pass in props as content: */}
+    <Message>Goodbye World</Message>
+
+    {/* Can even nest them: */}
     <Message>
-      Hello World
-      <Message>Goodbye World</Message>
+      Parent message
+      <Message>Child message</<Message>
     </Message>
   </div>
 )
+
+
 ReactDOM.render(element, rootElement)
 </script>
 </body>
