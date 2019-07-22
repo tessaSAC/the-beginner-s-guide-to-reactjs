@@ -1,22 +1,89 @@
 <body>
+
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
+
+<!-- Built-in prop type checker -->
 <script src="https://unpkg.com/prop-types@15.6.0/prop-types.js"></script>
+
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
 <div id="root"></div>
 
 <script type="text/babel">
-function SayHello(props) {
-  return (
-    <div>
-      Hello {props.firstName} {props.lastName}!
-    </div>
-  )
-}
+// function SayHello(props) {
+//   return (
+//     <div>
+//       Hello { props.firstName } { props.lastName }!
+//     </div>
+//   )
+// }
 
-SayHello.propTypes = {
-  firstName: PropTypes.string.isRequired,
-  lastName: PropTypes.string.isRequired,
+
+
+// Validate firstName prop's type:
+// SayHello.propTypes = {
+//   firstName: (props, propName, componentName) {
+//     const propType = typeof props[propName]
+//     if(propType !== 'string') {
+//       return new Error(`Hey, you should pass a string for ${ propName } in ${ componentName }, but you passed a ${ propType }.`)
+//     }
+//   }
+//   lastName: PropTypes.string.isRequired,
+// }
+
+
+
+// DRY for lastName:
+// const PropTypes = {
+//   string(props, propName, componentName) {
+//     const propType = typeof props[propName]
+//     if(propType !== 'string') {
+//       return new Error(`Hey, you should pass a string for ${ propName } in ${ componentName }, but you passed a ${ propType }.`)
+//     }
+//   }
+// }
+
+// SayHello.propTypes = {
+//   firstName: PropTypes.string,
+//   lastName: PropTypes.string,
+// }
+
+
+
+// Use built-in propTypes instead (see script tag):
+// function SayHello(props) {
+//   return (
+//     <div>
+//       Hello { props.firstName } { props.lastName || 'Unknown' }!
+//     </div>
+//   )
+// }
+
+// SayHello.propTypes = {
+//   firstName: PropTypes.string.isRequired,
+//   lastName: PropTypes.string,  // doesn't run as is because propTypes assume not required by default
+// }
+
+
+
+// Make propTypes a part of the class:
+function SayHello(props) {
+  static propTypes = {
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+  },
+  // NB: propTypes are not used in prod by default to speed things up
+  // Can remove from build with a package (confused as to how this works with the above)
+
+  render() {
+    const { firstName, lastName } = this.props
+    return (
+      <div>
+        Hello { props.firstName } { props.lastName }!
+      </div>
+    )
+  }
 }
 
 ReactDOM.render(
