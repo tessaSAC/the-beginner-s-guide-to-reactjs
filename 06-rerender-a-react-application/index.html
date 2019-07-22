@@ -1,19 +1,36 @@
 <div id="root"></div>
+
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
 <script type="text/babel">
 const rootElement = document.getElementById('root')
+
 function tick() {
   const time = new Date().toLocaleTimeString()
-  const element = (
-    <div>
-      It is
-      <input value={time} />
-      <input value={time} />
-    </div>
-  )
-  ReactDOM.render(element, rootElement)
+
+  function tick() {
+    const time = new Date().toLocaleTimeString()
+    const element = (
+      <div>
+        It is { time }
+        <input value={ time } />  ({/* note: input stays in focus on re-render; only changed parts are "updated" */})
+      </div>
+    )
+    ReactDOM.render(element, rootElement)
+
+    // NB: If using template string instead all nodes update rather than just updated children, will lose focus:
+    // rootElement.innerHTML = `
+    //   <div>
+    //     It is
+    //     <input value="${ time }" />
+    //   </div>
+    // `
+  }
+
+  tick()
+  setInterval(tick, 1000)  // re-render component every 1s
 }
 tick()
 setInterval(tick, 1000)
