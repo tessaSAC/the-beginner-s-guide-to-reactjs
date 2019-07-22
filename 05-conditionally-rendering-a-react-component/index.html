@@ -1,22 +1,45 @@
 <body>
 <div id="root"></div>
+
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
 <script type="text/babel">
 function Message({message}) {
+//   if(!message) return <div>No Message</div>
+//   // Remember is abstraction on top of: React.createElement('div', null, 'No Message')
+
+//   return <div>{ message }</div>
+//   // Abstraction of: React.createElement('div', { children: 'Hi there' })
+// }
+
+
+
+// Therefore can be ternary:
+// return message
+//   ? React.createElement('div', null, message)
+//   : React.createElement('div', null, 'No Message')
+
+
+
+// To wrap inside another div:
   return (
     <div>
-      {message ? (
-        <div>{message}</div>
-      ) : (
-        <div>No Message</div>
-      )}
+      {
+        // Ternary b/c only expressions can go inside curly braces
+        // Not what he said in L1~2
+        message
+          ? React.createElement('div', null, message)
+          : React.createElement('div', null, 'No Message')
+      }
     </div>
   )
 }
+
 ReactDOM.render(
-  <Message message={null} />,
+  <Message message={ null } />,  {/* will render 'No Message' */}
+  <Message message={ 'Hi there' } />,  {/* will render 'Hi there' */}
   document.getElementById('root'),
 )
 </script>
