@@ -3,6 +3,7 @@
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/prop-types@15.6.0/prop-types.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
 <div id="root"></div>
 
 <style>
@@ -27,41 +28,91 @@
 </style>
 
 <script type="text/babel">
-function Box({
-  style,
-  size,
-  className = '',
-  ...rest
-}) {
-  const sizeClassName = size ? `box--${size}` : ''
+// function Box(props) {
+//   return (
+//     <div
+//       className="box box--small"
+//       style={{ paddingLeft: 20 }}
+//       { ...props }
+//     >
+//       box
+//     </div>
+//   )
+// }
+
+// const element = (
+//   <div>
+//     <div
+//       className="box box--small"  {/* NB: className, not class */}
+//       style={{ paddingLeft: 45 }}
+//       {/* NB: attrs are camel-cased; 20 default unit is 'px'; this is being overridden by `style` on l35 */}
+//     >box</div>
+//   </div>
+// )
+
+
+
+// Destructure `style` and `className` so they can be augmented in JSX:
+// function Box(className = '', style, ...rest) {
+//   return (
+//     <div
+//       className={ `box ${ className }`.trim() }
+//       style={{ paddingLeft: 20, ...style }}
+//       { ...rest }
+//     >
+//       box
+//     </div>
+//   )
+// }
+
+// const element = (
+//   <div>
+//     <div
+//       className="box--small"
+//       style={{ backgroundColor: 'lightBlue' }}
+//     >small box</div>
+//   </div>
+
+//   <div>
+//     <div
+//       className="box--medium"
+//       style={{ backgroundColor: 'pink' }}
+//     >medium box</div>
+//   </div>
+
+//   <div>
+//     <div
+//       className="box--large"
+//       style={{ backgroundColor: 'orange' }}
+//     >large box</div>
+//   </div>
+// )
+
+
+
+// Pass in size via props:
+// NB: Styles are not vendor-prefixed
+  // Can be addressed by lib like styled components, emotion, or glamorous
+unction Box(className = '', size, style, ...rest) {
+  const sizeClassName = size ? `box--${ size } : ''`
+
   return (
     <div
-      className={`box ${className} ${sizeClassName}`}
-      style={{paddingLeft: 20, ...style}}
-      {...rest}
-    />
+      className={ `box ${ className } ${ size }`.trim() }
+      style={{ paddingLeft: 20, ...style }}
+      { ...rest }
+    >
+      box
+    </div>
   )
 }
+
 const element = (
   <div>
-    <Box
+    <div
       size="small"
-      style={{backgroundColor: 'lightblue'}}
-    >
-      small box
-    </Box>
-    <Box
-      size="medium"
-      style={{backgroundColor: 'pink'}}
-    >
-      medium box
-    </Box>
-    <Box
-      size="large"
-      style={{backgroundColor: 'orange'}}
-    >
-      large box
-    </Box>
+      style={{ backgroundColor: 'lightBlue' }}
+    >small box</div>
   </div>
 )
 
