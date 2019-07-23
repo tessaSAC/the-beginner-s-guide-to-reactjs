@@ -1,8 +1,10 @@
 <body>
 <div id="root"></div>
+
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
 <script type="text/babel">
 class MyFancyForm extends React.Component {
   static availableOptions = [
@@ -13,55 +15,56 @@ class MyFancyForm extends React.Component {
     'pear',
     'peach',
   ]
+
+
+  // GOAL: Sync state across 3 form inputs
   state = {
-    multiline: '',
     commaSeparated: '',
+    multiline: '',
     multiSelect: [],
   }
+
   handleCommaSeparatedChange = event => {
-    const {value} = event.target
-    const allVals = value
-      .split(',')
+    const { value } = event.target
+    const allVals = value.split(',')
       .map(v => v.trim())
-      .filter(Boolean)
+      .filter(Boolean)  // Delete any empty values
+
     this.setState({
       commaSeparated: value,
-      multiline: allVals.join('\n'),
-      multiSelect: allVals.filter(v =>
-        MyFancyForm.availableOptions.includes(v),
-      ),
+      multiline: allVals.join('\n'),  // Update multiline when commaSeparated gets updated
+      multiSelect: allVals.filter(v => myFancyForm.availableOptions.includes(v))  // Only the values in the multiSelect
     })
   }
+
   handleMultilineChange = event => {
-    const {value} = event.target
-    const allVals = value
-      .split('\n')
+    const { value } = event.target
+    const allVals = value.split(',')
       .map(v => v.trim())
-      .filter(Boolean)
+      .filter(Boolean)  // Delete any empty values
+
     this.setState({
+      commaSeparated = value.join(','),  // Update commaSeparated when multiline is updated
       multiline: value,
-      commaSeparated: allVals.join(','),
-      multiSelect: allVals.filter(v =>
-        MyFancyForm.availableOptions.includes(v),
-      ),
+      multiSelect: allVals.filter(v => myFancyForm.availableOptions.includes(v))
     })
   }
+
   handleMultiSelectChange = event => {
-    const allVals = Array.from(
-      event.target.selectedOptions,
-    ).map(o => o.value)
+    console.log({ target: event.target })  // Note selectedOptions array
+
+    const allVals = Array.from(event.target.selectedOptions).map(o => o.value)  // NodeList is not an array
+
     this.setState({
-      multiSelect: allVals,
-      multiline: allVals.join('\n'),
       commaSeparated: allVals.join(','),
+      multiline: allVals.join('\n'),
+      multiSelect: allVals
     })
   }
+
   render() {
-    const {
-      commaSeparated,
-      multiline,
-      multiSelect,
-    } = this.state
+    const { commaSeparated, multiline, multiSelect } = this.state  // Pull values from `state`
+
     return (
       <form>
         <div>
@@ -70,51 +73,41 @@ class MyFancyForm extends React.Component {
             <br />
             <input
               type="text"
-              value={commaSeparated}
-              onChange={
-                this.handleCommaSeparatedChange
-              }
+              {/* Problem: Assigning a prop to `value` prevents it from updating */}
+              value={ commaSeparated }
+              {/* Solution: Handle it manually */}
+              onChange={ this.handleCommaSeparatedChange }
             />
           </label>
         </div>
+
         <div>
           <label>
             multiline values:
             <br />
             <textarea
-              value={multiline}
-              rows={
-                MyFancyForm.availableOptions
-                  .length
-              }
-              onChange={
-                this.handleMultilineChange
-              }
+              value={ multiline }
+              rows={ MyFancyForm.availableOptions.length }
+              onChange={ this.handleMultilineChange }
             />
+            {/* NB: Normally in HTML we'd target the `children` but in React you need to target the `value` */}
           </label>
         </div>
+
         <div>
           <label>
             multiSelect values:
             <br />
             <select
               multiple
-              value={multiSelect}
-              size={
-                MyFancyForm.availableOptions
-                  .length
-              }
-              onChange={
-                this.handleMultiSelectChange
-              }
+              value={ multiSelect }  {/* needs to be an array for MULTISelect */}
+              size={ MyFancyForm.availableOptions.length }
+              onChange={ this.handleMultiSelectChange }
             >
-              {MyFancyForm.availableOptions.map(
-                optionValue => (
-                  <option
-                    key={optionValue}
-                    value={optionValue}
-                  >
-                    {optionValue}
+              {
+                MyFancyForm.availableOptions.map(optionValue => (
+                  <option key={ optionValue } value={ optionValue } >
+                    { optionValue }
                   </option>
                 ),
               )}
