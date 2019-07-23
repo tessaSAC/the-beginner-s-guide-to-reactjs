@@ -2,33 +2,62 @@
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
 <div id="root"></div>
 
 <script type="text/babel">
+// function StopWatch({ lapse, running }) {
+//   const buttonStyles = {
+//     border: '1px solid #ccc',
+//     background: '#fff',
+//     fontSize: '2em',
+//     padding: 15,
+//     margin: 5,
+//     width: 200,
+//   }
+
+//   return (
+//     <div style={{ textAlign: 'center' }}>
+//       <label
+//         style={{ fontSize: '5em', display: 'block' }}
+//       >
+//         { lapse }ms
+//       </label>
+//       <button style={ buttonStyles }>{ running ? 'Start' : 'Stop' }</button>
+//       <button style={ buttonStyles }>Clear</button>
+//     </div>
+//   )
+// }
+
+
+// Replace with a class:
 class StopWatch extends React.Component {
-  state = {lapse: 0, running: false}
-  handleRunClick = () => {
-    this.setState(state => {
-      if (state.running) {
-        clearInterval(this.timer)
-      } else {
-        const startTime =
-          Date.now() - this.state.lapse
-        this.timer = setInterval(() => {
-          this.setState({
-            lapse: Date.now() - startTime,
-          })
-        })
-      }
-      return {running: !state.running}
-    })
-  }
-  handleClearClick = () => {
+  // All components have a `render` method:
+  state = { lapse: 0, running: false }  // initial state
+
+  handleClearClick = _ => {
+    this.setState({ lapse: 0, running: false })
     clearInterval(this.timer)
-    this.setState({lapse: 0, running: false})
   }
+
+  handleRunClick = _ => {
+    this.setState(state => {
+      if(state.running) {  // Pause stopwatch
+        clearInterval(this.timer)
+      } else {  // Start stopwatch
+        const startTime = Date.now() - this.state.lapse
+        this.timer = setInterval(_ => { this.setState({ lapse: Date.now() - startTime }) })
+      }
+
+      return { running: !state.running }
+    })
+
+  }
+
   render() {
-    const {lapse, running} = this.state
+
+    const { lapse, running } = this.state  // get data from state instead
+
     const buttonStyles = {
       border: '1px solid #ccc',
       background: '#fff',
@@ -37,34 +66,23 @@ class StopWatch extends React.Component {
       margin: 5,
       width: 200,
     }
+
     return (
-      <div style={{textAlign: 'center'}}>
+      <div style={{ textAlign: 'center' }}>
         <label
-          style={{
-            fontSize: '5em',
-            display: 'block',
-          }}
+          style={{ fontSize: '5em', display: 'block' }}
         >
-          {lapse}ms
+          { lapse }ms
         </label>
-        <button
-          onClick={this.handleRunClick}
-          style={buttonStyles}
-        >
-          {running ? 'Stop' : 'Start'}
-        </button>
-        <button
-          onClick={this.handleClearClick}
-          style={buttonStyles}
-        >
-          Clear
-        </button>
+        <button onClick={ this.handleRunClick } style={ buttonStyles }>{ running ? 'Start' : 'Stop' }</button>
+        <button onClick={ this.handleClearClick } style={ buttonStyles }>Clear</button>
       </div>
     )
   }
 }
 
-const element = <StopWatch />
+
+const element = <StopWatch lapse={ 0 } running={ true } />
 ReactDOM.render(
   element,
   document.getElementById('root'),
