@@ -41,6 +41,7 @@ class App extends React.Component {
           +
         </button>
         {items.map((i, index) => (
+          {/* key serves same purpose as in Vue */}
           <div key={i.id}>
             <button
               onClick={() => this.removeItem(i)}
@@ -82,12 +83,19 @@ class FocusDemo extends React.Component {
   render() {
     return (
       <div>
+
+
+
+        {/* Problem: Focus stays with first input rather than with item */}
         <div>
           <h1>Without Key</h1>
           {this.state.items.map(item => (
             <input value={item.value} />
           ))}
         </div>
+
+
+        {/* Problem: Same here b/c idx isn't a proper key */}
         <div>
           <h1>With Key as Index</h1>
           {this.state.items.map((item, index) => (
@@ -97,6 +105,8 @@ class FocusDemo extends React.Component {
             />
           ))}
         </div>
+
+        {/* Solution: Use a unique identifier tied to the property */}
         <div>
           <h1>With Key</h1>
           {this.state.items.map(item => (
