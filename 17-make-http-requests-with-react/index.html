@@ -7,18 +7,20 @@
 
 <script type="text/babel">
 class UserCompany extends React.Component {
-  state = {company: undefined, loaded: false}
+  state = { company: undefined, loaded: false }
+
   fetchCompany = () => {
     axios({
       url: 'https://api.github.com/graphql',
       method: 'post',
       data: {
         query: `{
-          user(login: "${this.props.username}") {
+          user(login: "${ this.props.username }") {
             company
           }
         }`,
       },
+
       headers: {
         Authorization: `bearer I DELETED THE TOKEN. YOU'LL HAVE TO MAKE YOUR OWN`,
       },
@@ -26,8 +28,7 @@ class UserCompany extends React.Component {
       response => {
         this.setState({
           loaded: true,
-          company:
-            response.data.data.user.company,
+          company: response.data.data.user.company,
         })
       },
       error => {
@@ -38,18 +39,13 @@ class UserCompany extends React.Component {
       },
     )
   }
-  componentDidMount() {
-    this.fetchCompany()
-  }
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.username !== this.props.username
-    ) {
-      this.fetchCompany()
-    }
-  }
+
+  componentDidMount() { this.fetchCompany() }
+
+  componentDidUpdate(prevProps) { if(prevProps.username !== this.props.username) this.fetchCompany() }
+
   render() {
-    return this.state.loaded
+    return this.state.loaded  // only show data if it's loaded
       ? this.state.error
         ? 'ERROR (You probably need to add your own token)'
         : this.state.company || 'Unknown'
@@ -65,6 +61,7 @@ class App extends React.Component {
       username: this.inputNode.value,
     })
   }
+
   render() {
     const {username} = this.state
     return (
