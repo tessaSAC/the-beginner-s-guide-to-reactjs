@@ -1,35 +1,42 @@
 <body>
 <div id="root"></div>
+
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+
+
 <script type="text/babel">
 class NameForm extends React.Component {
   handleSubmit = event => {
-    event.preventDefault()
-    console.log({target: event.target})
+    event.preventDefault()  // Don't refresh page on submit
+    console.log({ target: event.target })  // shows `input` has a `value` prop
+
+    // Plain HTML ways to grab input value:
     console.log(event.target[0].value)
-    console.log(
-      event.target.elements.username.value,
-    )
-    console.log(this.inputNode.value)
+    console.log(event.target.elements.username.value)
+
+    // React ref way to grab input value:
+    console.log(this.inputNode.value)  // Most direct but can be a pain to manage a bunch of refs
   }
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={ this.handleSubmit }>
         <label>
           Name:
           <input
             type="text"
-            name="username"
-            ref={node => (this.inputNode = node)}
+            name="username"  {/* Allows us to assign input to `username` prop somehow */}
+            ref={ node => this.inputNode = node }  {/* Most direct way to grab input value */}
           />
         </label>
         <button type="submit">Submit</button>
-      </form>
     )
   }
 }
+
+
 ReactDOM.render(
   <NameForm />,
   document.getElementById('root'),
