@@ -20,7 +20,7 @@ class StopWatch extends React.Component {
               lapse: Date.now() - startTime,
             },
             () => {
-              console.log(this.state.lapse)
+              console.log(this.state.lapse)  // this will continue to log even after component is destroyed because the interval is not destroyed
             },
           )
         })
@@ -28,13 +28,21 @@ class StopWatch extends React.Component {
       return {running: !state.running}
     })
   }
+
   handleClearClick = () => {
     clearInterval(this.timer)
     this.setState({lapse: 0, running: false})
   }
+
+
+
+  // Use `componentWillUnmount` lifecycle hook to destroy the interval
   componentWillUnmount() {
-    clearInterval(this.timer)
+    clearInterval(this.timer)  // prevents the above memory leak
   }
+
+
+
   render() {
     const {lapse, running} = this.state
     const buttonStyles = {
