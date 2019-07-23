@@ -1,50 +1,67 @@
 <body>
 <div id="root"></div>
+
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+
+
 <script type="text/babel">
 class NameForm extends React.Component {
-  state = {error: this.props.getErrorMessage('')}
   handleSubmit = event => {
     event.preventDefault()
-    const value =
-      event.target.elements.username.value
-    const error = this.props.getErrorMessage(
-      value,
-    )
-    if (error) {
-      alert(`error: ${error}`)
-    } else {
-      alert(`success: ${value}`)
-    }
-  }
-  handleChange = event => {
-    const {value} = event.target
-    this.setState({
-      error: this.props.getErrorMessage(value),
-    })
+    const value = event.target.elements.username.value
+    const error = this.props.getErrorMessage(value)
+
+    if (error) alert(`error: ${error}`)
+    else alert(`success: ${value}`)
   }
 
+
+
+  // Need state to validate in real time:
+  // state = { error: null }
+
+  // To validate live don't need to control value, just validate onChange
+  handleChange = event => {
+    const { value } = event.target
+    this.setState({ error: this.props.getErrorMessage(value) })
+  }
+
+  // Set error state when component mounts:
+  // componentDidMount() {
+    //   this.setState({ error: this.props.getErrorMessage('') })  // Initialized with disabled button
+  // }
+
+  // Can also initialize in state directly, avoiding unnecessary re-render:
+  state = { error: this.props.getErrorMessage('') }  // props already exists by the time this runs
+
+
+
   render() {
-    const {error} = this.state
+    const { error } = this.state  // get error from state
+
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={ this.handleSubmit }>
         <label>
           Name:
           <input
             type="text"
-            onChange={this.handleChange}
+            onChange={ this.handleChange }
             name="username"
           />
         </label>
-        {error ? (
-          <div style={{color: 'red'}}>
-            {error}
-          </div>
-        ) : null}
+
+        {/* Display error if error: */}
+        {
+          error
+          ? <div style={ { color: 'red' } }>{error}</div>
+          : null
+        }
+
         <button
-          disabled={Boolean(error)}
+          disabled={ Boolean(error) }  {/* Disable button if error */}
           type="submit"
         >
           Submit
@@ -57,12 +74,10 @@ class NameForm extends React.Component {
 ReactDOM.render(
   <NameForm
     getErrorMessage={value => {
-      if (value.length < 3) {
-        return `Value must be at least 3 characters, but is only ${value.length}`
-      }
-      if (!value.includes('s')) {
-        return `Value does not include "s" but it should!`
-      }
+      if(value.length < 3) return `Value must be at least 3 characters, but is only ${value.length}`
+
+      if(!value.includes('s')) return `Value does not include "s" but it should!`
+
       return null
     }}
   />,
