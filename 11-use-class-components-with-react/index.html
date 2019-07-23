@@ -1,23 +1,65 @@
 <body>
 <div id="root"></div>
+
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
 <script type="text/babel">
 class Counter extends React.Component {
-  state = {count: 0}
-  handleClick = () => {
-    this.setState(({count}) => ({
-      count: count + 1,
-    }))
-  }
+  // constructor(...args) {
+  //   super(...args)
+  //   this.state = { count: 0 }
+  // }
+
+  // handleClick() {
+  //   this.setState(({ count }) => ({ count: count + 1 }))
+  // }
+
   render() {
     return (
-      <button onClick={this.handleClick}>
-        {this.state.count}
+      <button onClick={
+        {/* () => this.setState(({ count }) => ({ count: count + 1 })) */}
+        {/* Problem: Inline methods can be less performant */}
+
+        {/* Solution: Extract to class method: */}
+        {/* this.handleClick */}
+        {/* Problem: Doesn't know what `this.setState` is */}
+
+        {/* Solution: Bind to `this`: */}
+        {/* this.handleClick.bind(this) */}
+        {/* Problem: annoying to type and potentially not performant */}
+
+        {/* Solution: Bind in `super()` */}
+        this.handleClick
+      }>
+        { this.state.count }
       </button>
     )
   }
+
+  // constructor(...args) {
+  //   super(...args)
+  //   this.state = { count: 0 }
+  //   this.handleClick = this.handleClick.bind(this)
+  //   // Problem: This is still an extra step
+  // }
+
+
+
+  // Solution: Use "Public Class Fields":
+  // NB: Extracting the below from `constructor` makes it the default constructor so we can delete it
+  state = { count: 0 }
+
+  // handleClick = function() {
+  //   this.setState(({ count }) => ({ count: count + 1 }))
+  // }.bind(this)  // bind to instance
+  // Problem: Still too much work
+
+
+
+  // Solution: Use lexical `this`:
+  handleClick = _ => this.setState(({ count }) => ({ count: count + 1 }))
 }
 ReactDOM.render(
   <Counter />,
