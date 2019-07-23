@@ -1,44 +1,60 @@
 <body>
 <div id="root"></div>
+
 <script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
 <script type="text/babel">
-const state = {eventCount: 0, username: ''}
+
+const state = { eventCount: 0, username: '' }
 
 function App() {
   return (
     <div>
       <p>
-        There have been {state.eventCount} events
+        There have been { state.eventCount } events
       </p>
       <p>
-        <button onClick={increment}>⚛️</button>
+        <button onClick={ increment }>⚛️</button>  ({ /* NB: this is a "direct reference" to the event handler(???) */ })
       </p>
-      <p>You typed: {state.username}</p>
+      <p>You typed: { state.username }</p>
       <p>
-        <input onChange={updateUsername} />
+        <input onChange={ updateUsername } />  ({ /* onChange is slightly unique to input */ })
       </p>
     </div>
   )
 }
 
-function increment() {
-  setState({
-    eventCount: state.eventCount + 1,
-  })
-}
-
-function updateUsername(event) {
-  setState({
-    username: event.target.value,
-  })
-}
-
+// Assign new state to `state` object
 function setState(newState) {
   Object.assign(state, newState)
   renderApp()
 }
+
+
+
+// Override state:
+setState({
+  eventCount: 10,
+  username: 'Bob'
+})
+
+
+
+// Event handlers:
+function increment() {
+  setState({ eventCount: state.eventCount + 1 })
+}
+
+function updateUsername(event) {
+  console.log(event)  // this is a proxy; the native event is `event.nativeEvent`; most of the time you won't need this
+
+  setState({
+    username: event.target.value
+  })
+}
+
+
 
 function renderApp() {
   ReactDOM.render(
