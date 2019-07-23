@@ -3,6 +3,7 @@
 <script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
 <script src="https://unpkg.com/vanilla-tilt@1.4.1/dist/vanilla-tilt.min.js"></script>
+
 <div id="root"></div>
 
 <style>
@@ -50,22 +51,25 @@ class Tilt extends React.Component {
       'max-glare': 0.5,
     })
   }
+
   render() {
     return (
       <div
-        ref={node => (this.rootNode = node)}
+        {/* need a `ref` to access DOM node directly: */}
+        ref={ node => (this.rootNode = node) }  {/* gets the `node` as an arg */}
         className="tilt-root"
       >
         <div className="tilt-child">
-          <div {...this.props} />
+          <div { ...this.props } />
         </div>
       </div>
     )
   }
 }
+
 const element = (
   <div className="totally-centered">
-    <Tilt>
+    <Tilt>  {/* a ref here would be the instance (`this`) ??? this section is not well-explained */}
       <div className="totally-centered">
         vanilla-tilt.js
       </div>
